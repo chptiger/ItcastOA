@@ -29,4 +29,6 @@ public class TestSpring {
 		TestAction testAction = (TestAction) ac.getBean("testAction");
 		System.out.println(testAction);
 	}
+	
+	
 }

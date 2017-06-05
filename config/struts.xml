@@ -13,11 +13,31 @@
 	
     <package name="default" namespace="/" extends="struts-default">
     	
+    	<!--  -->
+    	<interceptors>
+    		<!-- declare interceptor -->
+    		<interceptor name="checkPrivilege" class="cn.itcast.oa.util.CheckPrivilege"></interceptor>
+    		
+    		<!-- config self default interceptor stack -->
+    		<interceptor-stack name="mydefaultStack">
+    			<interceptor-ref name="checkPrivilege"></interceptor-ref>
+    			<interceptor-ref name="defaultStack"></interceptor-ref>
+    		</interceptor-stack>
+    	</interceptors>
+    	
+    	<!-- config default interceptor stack -->
+    	<default-interceptor-ref name="mydefaultStack"></default-interceptor-ref>
+    	
+    	<!-- config global Result -->
+    	<global-results>
+ 		    <result name="loginUI">/WEB-INF/jsp/loginoutAction/loginUI.jsp</result>
+ 		    <result name="noPrivilegeUI">/noPrivilegeUI.jsp</result>
+    	</global-results>
+    	
     	<!-- 配置测试用的action -->
     	<action name="Test" class="testAction">
     		<result name="success">/test.jsp</result>
     	</action>
-    	
     	
     	<!-- Role -->
     	<action name="role_*" class="roleAction" method="{1}">
@@ -27,6 +47,7 @@
     		<result name="editUI">/WEB-INF/jsp/roleAction/editUI.jsp</result>
     		 -->
     		<result name="saveUI">/WEB-INF/jsp/roleAction/saveUI.jsp</result>
+    		<result name="setPrivilegeUI">/WEB-INF/jsp/roleAction/setPrivilegeUI.jsp</result>
     		<result name="toList" type="redirectAction">role_list</result>
     	</action>
     	
@@ -43,6 +64,43 @@
     		<result name="list">/WEB-INF/jsp/userAction/list.jsp</result>
     		<result name="saveUI">/WEB-INF/jsp/userAction/saveUI.jsp</result>
     		<result name="toList" type="redirectAction">user_list</result>
+    	</action>
+    	
+    	<!-- Loginout -->
+    	<action name="loginout_*" class="loginoutAction" method="{1}">
+    		<result name="logout">/WEB-INF/jsp/loginoutAction/logout.jsp</result>
+    		<result name="toHome" type="redirect">/index.jsp </result>
+    	</action>
+    	
+    	<!-- Home index -->
+    	<action name="home_*" class="homeAction" method="{1}">
+    		<result name="{1}">/WEB-INF/jsp/homeAction/{1}.jsp</result>
+    	</action>
+    	
+    	<!-- Forum -->
+    	<action name="forumManage_*" class="forumManageAction" method="{1}">
+    		<result name="list">/WEB-INF/jsp/forumManageAction/list.jsp</result>
+    		<result name="saveUI">/WEB-INF/jsp/forumManageAction/saveUI.jsp</result>
+    		<result name="toList" type="redirectAction">forumManage_list</result>
+    	</action>
+    	
+    	<!-- Forum -->
+    	<action name="forum_*" class="forumAction" method="{1}">
+    		<result name="list">/WEB-INF/jsp/forumAction/list.jsp</result>
+    		<result name="show">/WEB-INF/jsp/forumAction/show.jsp</result>
+    	</action>
+    	
+    	<!-- Topic -->
+    	<action name="topic_*" class="topicAction" method="{1}">
+    		<result name="show">/WEB-INF/jsp/topicAction/show.jsp</result>
+    		<result name="addUI">/WEB-INF/jsp/topicAction/list.jsp</result>
+    		<result name="toShow" type="redirectAction">topic_show?id=${id}</result>
+    	</action>
+    	
+    	<!-- Reply -->
+    	<action name="reply_*" class="replyAction" method="{1}">
+    		<result name="addUI">/WEB-INF/jsp/replyAction/addUI.jsp</result>
+    		<result name="toTopicShow" type="redirectAction">topic_show?id=${topicId}</result>
     	</action>
     	
     </package>

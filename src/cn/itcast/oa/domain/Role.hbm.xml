@@ -19,6 +19,11 @@
 			<many-to-many class="User" column="userId"></many-to-many>
 		</set>
 
+		<!-- privilege属性，表达了我与Privilege的多对多关系 -->
+		<set name="privileges" table="itcast_role_privilege" lazy="false">
+			<key column="roleId"></key>
+			<many-to-many class="Privilege" column="privilegeId"></many-to-many>
+		</set>
 
 	</class>
 

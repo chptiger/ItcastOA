@@ -3,6 +3,7 @@ package cn.itcast.oa.view.action;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -55,7 +56,7 @@ public class UserAction extends BaseAction<User>{
 		model.setRoles(new HashSet<Role>(roleList));
 		// 保存到数据库
 		userService.save(model);
-
+ 
 		return "toList";
 	}
 
@@ -64,6 +65,26 @@ public class UserAction extends BaseAction<User>{
 		// 准备要回显的数据
 		User user = userService.getById(model.getId());
 		ActionContext.getContext().getValueStack().push(user);
+		
+//		prepare departmentId	
+		if(user.getDepartment()!=null){
+			departmentId = user.getDepartment().getId();
+		}
+		
+//		prepare roleIds
+		roleIds = new Long[user.getRoles().size()];
+		int index = 0;
+		for(Role role:user.getRoles()){
+			roleIds[index++] = role.getId();
+		}
+//		prepare data: departmentList
+		List<Department> topList = departmentService.findTopList();
+		List<Department> departmentList = DepartmentUtils.getAllDepartmentList(topList, null);
+		ActionContext.getContext().put("departmentList", departmentList);
+		
+//		prepare data: roleList
+		List<Role> roleList = roleService.findAll();
+		ActionContext.getContext().put("roleList", roleList);
 		return "saveUI";
 	}
 
@@ -75,7 +96,16 @@ public class UserAction extends BaseAction<User>{
 		// 2, 设置要修改的属性
 		user.setName(model.getName());
 		user.setDescription(model.getDescription());
-
+		user.setLoginName(model.getLoginName());
+		user.setGender(model.getGender());
+		user.setEmail(model.getEmail());
+		user.setPhoneNumber(model.getPhoneNumber());
+		
+//		>> related a department
+		user.setDepartment(departmentService.getById(departmentId));
+//		>> related multiple roles
+		List<Role> roleList = roleService.getByIds(roleIds);
+		user.setRoles(new HashSet<Role>(roleList));
 		// 3，更新到数据库
 		userService.update(user);
 
@@ -83,7 +113,16 @@ public class UserAction extends BaseAction<User>{
 	}
 	
 	/**initialize password 1234 */
-	public String intPassword() throws Exception{
+	public String initPassword() throws Exception{
+		// 1，从数据库中获取要修改的原始对象
+		User user = userService.getById(model.getId());
+
+		// 2, 设置要修改的属性
+		String md5 = DigestUtils.md5Hex("1234");
+		user.setPassword(md5);
+		
+		// 3，更新到数据库
+		userService.update(user);
 		return "toList";
 	}
 

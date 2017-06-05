@@ -20,6 +20,11 @@
 		<url-pattern>*.do</url-pattern>
 	</filter-mapping>
 	
+	<!-- configuration listener for initialization, position is after ContextLoaderListener of Spring, for need spring object -->
+	<listener>
+		<listener-class>cn.itcast.oa.util.OAInitListener</listener-class>
+	</listener>
+	
 	<!-- 配置Struts2的核心的过滤器 -->
 	<filter>
 		<filter-name>struts2</filter-name>

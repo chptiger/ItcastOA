@@ -1,6 +1,7 @@
 package cn.itcast.oa.base;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -65,6 +66,9 @@ public abstract class DaoSupportImpl<T> implements DaoSupport<T> {
 	}
 
 	public List<T> getByIds(Long[] ids) {
+		if( ids == null || ids.length == 0){
+			return Collections.EMPTY_LIST;
+		}
 		return getSession().createQuery(//
 				// 注意空格！
 				"FROM " + clazz.getSimpleName() + " WHERE id IN (:ids)")//

@@ -133,7 +133,7 @@ function removeLocationAddress(html) {
 //******************************************************
 function delConfirm( message ){
     if(message == null){
-        message = "您确定要删除本记录吗？";
+        message = "Do you want to delete this record？";
     }
     return window.confirm(message);
 }
@@ -146,7 +146,7 @@ function beforeDelete( linkElement ) {
 	// 得到选中数据的value值，并拼接成请求参数字符串，然后替换相应的<a>的href值，加上相应的id值的请求参数
 	generateParamStrAndReplaceHref(linkElement, "id", getSelectedDataValues());
 	
-	return confirm("确实要删除数据吗？");
+	return confirm("Do you want to delete this record？");
 }
 function beforeEdit( linkElement ){
 	if(!checkSelectedData(false)){ // 只能选择一条数据
